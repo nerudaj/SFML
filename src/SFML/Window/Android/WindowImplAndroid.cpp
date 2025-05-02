@@ -410,18 +410,10 @@ int WindowImplAndroid::processKeyEvent(AInputEvent* inputEvent, ActivityStates& 
 
     if (std::holds_alternative<Keyboard::Key>(sfCode))
     {
-        return processKeyboardKeyEvent(
-            inputEvent,
-            action,
-            std::get<Keyboard::Key>(sfCode),
-            metakey
-        );
+        return processKeyboardKeyEvent(inputEvent, action, std::get<Keyboard::Key>(sfCode), metakey);
     }
 
-    return processJoystickButtonEvent(
-        action,
-        std::get<Joystick::Button>(sfCode),
-        states);
+    return processJoystickButtonEvent(action, std::get<Joystick::Button>(sfCode), states);
 }
 
 ////////////////////////////////////////////////////////////
@@ -475,7 +467,7 @@ int WindowImplAndroid::processKeyboardKeyEvent(AInputEvent* inputEvent, std::int
 ////////////////////////////////////////////////////////////
 int WindowImplAndroid::processJoystickButtonEvent(std::int32_t action, Joystick::Button button, ActivityStates& states)
 {
-    const auto buttonIdx = static_cast<std::underlying_type_t<decltype(button)>>(button);
+    const auto buttonIdx                      = static_cast<std::underlying_type_t<decltype(button)>>(button);
     states.isJoystickButtonPressed[buttonIdx] = action == AKEY_EVENT_ACTION_DOWN;
     return 1;
 }
@@ -596,8 +588,7 @@ int WindowImplAndroid::processPointerEvent(bool isDown, AInputEvent* inputEvent,
 
 
 ////////////////////////////////////////////////////////////
-std::variant<Keyboard::Key, Joystick::Button>
-WindowImplAndroid::androidKeyToSF(std::int32_t key)
+std::variant<Keyboard::Key, Joystick::Button> WindowImplAndroid::androidKeyToSF(std::int32_t key)
 {
     // clang-format off
     switch (key)
